@@ -14,12 +14,14 @@
 
     //Update distant data
     const response = await fetch(`http://localhost:3000/todos/`, {
-      method: "post",
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+      },
       body: JSON.stringify({ name: name })
     });
-
-    console.log(await response.json())
-
+    
     //Reset input
     e.target.new.value = "";
   }
@@ -40,6 +42,6 @@
 </style>
 
 <form on:submit|preventDefault={addTodo}>
-  <input type="text" name="new" placeholder="New Todo" />
+  <input type="text" name="new" placeholder="New Todo" autocomplete="off" />
   <input type="submit" value="Add" />
 </form>

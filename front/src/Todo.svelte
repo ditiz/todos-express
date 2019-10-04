@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition";
   import { todos } from "./store/todos";
 
   export let todo = {};
@@ -38,7 +39,7 @@
   }
 </style>
 
-<li>
+<li transition:fade>
   {todo.name}
   <button on:click={() => removeTask(todo.id)}>x</button>
 </li>

@@ -19,15 +19,14 @@ let todos = [
 
 app.use(express.static("public"));
 app.use(express.json());
+app.use(cors());
 
-app.get("/todos", cors(), (req, res) => {
+app.get("/todos", (req, res) => {
   res.json(todos);
 });
 
-app.post("/todos", cors(), (req, res) => {
+app.post("/todos", (req, res) => {
   const name = req.body.name;
-
-  console.log("name", req.body)
 
   todos = [
     ...todos,
@@ -40,7 +39,7 @@ app.post("/todos", cors(), (req, res) => {
   res.json(req.body);
 });
 
-app.get("/todos/remove/:id", cors(), (req, res) => {
+app.get("/todos/remove/:id", (req, res) => {
   todos = todos.filter(todo => todo.id != req.params.id);
   res.json(true);
 });
