@@ -1,44 +1,48 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 const app = express();
+const fs = require("fs");
 
 const host = "localhost";
 const port = 3000;
+const dataFile = __dirname + "/src/data.json";
+let todos = [];
 
-let todos = [
-  {
-    id: 1,
-    name: "do an app"
-  },
-  {
-    id: 2,
-    name: "make the app good"
-  }
-];
+fs.readFile(dataFile, (err, data) => {
+  if (err) return false;
+  todos = JSON.parse(data);
+});
 
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors());
 
+//Get todos
 app.get("/todos", (req, res) => {
   res.json(todos);
 });
 
+//Add todos
 app.post("/todos", (req, res) => {
   const name = req.body.name;
 
-  todos = [
-    ...todos,
-    {
-      id: todos.length + 1,
-      name: name
-    }
-  ];
+  const newTodo = {
+    id: todos.length + 1,
+    name: name
+  };
 
-  res.json(req.body);
+  const pouet = (todos = [...todos, newTodo]);
+
+  fs.writeFile(dataFile, JSON.stringify(pouet), err => {
+    if (err) return console.log;
+    console.log(JSON.stringify(pouet, todos));
+  });
+
+  res.json(true);
 });
 
+//Remove todos
 app.get("/todos/remove/:id", (req, res) => {
   todos = todos.filter(todo => todo.id != req.params.id);
   res.json(true);
