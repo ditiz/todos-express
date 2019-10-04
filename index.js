@@ -1,5 +1,6 @@
 const express = require("express");
-const parser = require("body-parser");
+const cors = require("cors");
+const bodyParser = require('body-parser')
 const app = express();
 
 const host = "localhost";
@@ -19,19 +20,29 @@ let todos = [
 app.use(express.static("public"));
 app.use(express.json());
 
-app.get("/todos", (req, res) => {
-  res.send(todos);
+app.get("/todos", cors(), (req, res) => {
+  res.json(todos);
 });
 
-app.post("/todos", (req, res) => {
+app.post("/todos", cors(), (req, res) => {
   const name = req.body.name;
 
-  todos = [...todos, {
-    id: todos.length + 1,
-    name: name
-  }];
+  console.log("name", req.body)
 
-  res.send(todos);
+  todos = [
+    ...todos,
+    {
+      id: todos.length + 1,
+      name: name
+    }
+  ];
+
+  res.json(req.body);
+});
+
+app.get("/todos/remove/:id", cors(), (req, res) => {
+  todos = todos.filter(todo => todo.id != req.params.id);
+  res.json(true);
 });
 
 app.listen(port, host, () => {
